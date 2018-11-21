@@ -1,0 +1,82 @@
+﻿@model IEnumerable<MondoModaAcme.Models.TipoProducto>
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <h2>Tipos Producto</h2>
+
+    <p>
+        <a id="runCreate"class="btn btn-primary">Nuevo</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.NombreTipo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Descripcion)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NombreTipo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Descripcion)
+                    </td>
+                    <td>
+                        <a data-id="@item.Id" class="runEdit">Editar</a> |
+                        <a data-id="@item.Id" class="runDetails">Detalles</a> |
+                        <a data-id="@item.Id" class="runDelete">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="modal" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body" id="myForm"></div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).on('click', "#runCreate", function () {
+            $('#myForm').load('TiposProducto/Create');
+            $('#myModal').modal('show');
+        });
+        $(document).on('click', ".runEdit", function () {
+            $('#myForm').load('TiposProducto/Edit/' + $(this).data('id'));
+            $('#myModal').modal('show');
+        });
+        $(document).on('click', ".runDetails", function () {
+            $('#myForm').load('TiposProducto/Details/' + $(this).data('id'));
+            $('#myModal').modal('show');
+        });
+        $(document).on('click', ".runDelete", function () {
+            $('#myForm').load('TiposProducto/Delete/' + $(this).data('id'));
+            $('#myModal').modal('show');
+        });
+    </script>
+}
+else
+{
+    <h2>Tipos Producto</h2>
+    <div class="alert alert-danger">
+        <strong>Debe estar autenticado para usar este módulo</strong>
+    </div>
+}
